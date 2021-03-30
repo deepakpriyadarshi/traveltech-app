@@ -1,0 +1,17 @@
+.register-section {
+    background-color: #f2f4f4;
+    min-height: 100vh;
+}
+
+.register-image-block {
+    display: flex;
+    justify-content: center;
+}
+
+.register-image {
+    width: 70%;
+}
+
+.register-form-block {
+    background-color: #f9f9f9;
+}

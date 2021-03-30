@@ -8,18 +8,9 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Login from "./pages/Login";
-
 ReactDOM.render(
     <React.StrictMode>
-        <Router>
-            <Switch>
-                <Route exact path="/">
-                    <Login />
-                </Route>
-            </Switch>
-        </Router>
+        <App />
     </React.StrictMode>,
     document.getElementById("root")
 );
