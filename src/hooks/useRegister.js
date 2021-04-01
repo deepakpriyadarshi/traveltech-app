@@ -32,6 +32,9 @@ function useRegister() {
         } else if (validator.isEmpty(email)) {
             setErrorMessage({ ...errorMessage, email: "Please Enter Email" });
             valid = false;
+        } else if (!validator.isEmail(email)) {
+            setErrorMessage({ ...errorMessage, email: "Please Enter A Valid Email" });
+            valid = false;
         } else if (validator.isEmpty(password)) {
             setErrorMessage({ ...errorMessage, password: "Please Enter Password" });
             valid = false;

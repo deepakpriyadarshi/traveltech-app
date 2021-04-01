@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Redirect } from "react-router";
 
@@ -6,13 +6,16 @@ import cupIcon from "../../assets/images/icons/cup.png";
 import bannerImage from "../../assets/images/banner-design.png";
 
 import { getUserDetails } from "../../utils/api/user";
+import { clearUserAuthToken } from "../../utils/localstorage";
 
 function Dashboard() {
     const { isLoading, error, data, isFetching } = useQuery("userdetails", getUserDetails);
 
-    const userDetails = data?.data;
+    const [logout, setLogout] = useState(false);
 
-    if (error || userDetails === null) return <Redirect to="/" />;
+    let userDetails = data?.data;
+
+    if (error || userDetails === null || logout) return <Redirect to="/" push={true} />;
 
     if (isLoading || isFetching)
         return (
@@ -23,7 +26,19 @@ function Dashboard() {
         );
 
     return (
-        <div className="container-fluid mt-5">
+        <div className="container-fluid">
+            <div className="text-right mt-3 mb-3">
+                <button
+                    className="btn btn-danger"
+                    onClick={() => {
+                        clearUserAuthToken();
+                        setLogout(true);
+                    }}
+                >
+                    Logout
+                </button>
+            </div>
+
             <div className="row">
                 <div className="col-xl-4 col-md-6 col-12 dashboard-greetings">
                     <div className="card card-shadow">
@@ -96,8 +111,8 @@ function Dashboard() {
 
             <div className="row mt-4">
                 <div className="col-xl-6 col-12">
-                    <div class="card card-shadow table-responsive">
-                        <table class="table table-striped">
+                    <div className="card card-shadow table-responsive">
+                        <table className="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Campaign</th>
@@ -108,64 +123,64 @@ function Dashboard() {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="p-2 line-ellipsis">
-                                        <img class="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
+                                    <td className="p-2 line-ellipsis">
+                                        <img className="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
                                         Fastrack Watches
                                     </td>
-                                    <td class="p-2">
-                                        <i class="bx bx-trending-up text-success align-middle mr-50"></i>
+                                    <td className="p-2">
+                                        <i className="bx bx-trending-up text-success align-middle mr-50"></i>
                                         <span>30%</span>
                                     </td>
-                                    <td class="p-2">$5,536</td>
-                                    <td class="text-success p-2">Active</td>
+                                    <td className="p-2">$5,536</td>
+                                    <td className="text-success p-2">Active</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 line-ellipsis">
-                                        <img class="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
+                                    <td className="p-2 line-ellipsis">
+                                        <img className="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
                                         Puma Shoes
                                     </td>
-                                    <td class="p-2">
-                                        <i class="bx bx-trending-down text-danger align-middle mr-50"></i>
+                                    <td className="p-2">
+                                        <i className="bx bx-trending-down text-danger align-middle mr-50"></i>
                                         <span>15.5%</span>
                                     </td>
-                                    <td class="p-2">$1,569</td>
-                                    <td class="text-success p-2">Active</td>
+                                    <td className="p-2">$1,569</td>
+                                    <td className="text-success p-2">Active</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 line-ellipsis">
-                                        <img class="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
+                                    <td className="p-2 line-ellipsis">
+                                        <img className="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
                                         Nike Air Jordan
                                     </td>
-                                    <td class="p-2">
-                                        <i class="bx bx-trending-up text-success align-middle mr-50"></i>
+                                    <td className="p-2">
+                                        <i className="bx bx-trending-up text-success align-middle mr-50"></i>
                                         <span>70.3%</span>
                                     </td>
-                                    <td class="p-2">$23,859</td>
-                                    <td class="text-danger p-2">Closed</td>
+                                    <td className="p-2">$23,859</td>
+                                    <td className="text-danger p-2">Closed</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 line-ellipsis">
-                                        <img class="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
+                                    <td className="p-2 line-ellipsis">
+                                        <img className="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
                                         Oneplus 7 pro
                                     </td>
-                                    <td class="p-2">
-                                        <i class="bx bx-trending-up text-success align-middle mr-50"></i>
+                                    <td className="p-2">
+                                        <i className="bx bx-trending-up text-success align-middle mr-50"></i>
                                         <span>10.4%</span>
                                     </td>
-                                    <td class="p-2">$9,523</td>
-                                    <td class="text-success p-2">Active</td>
+                                    <td className="p-2">$9,523</td>
+                                    <td className="text-success p-2">Active</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 line-ellipsis">
-                                        <img class="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
+                                    <td className="p-2 line-ellipsis">
+                                        <img className="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
                                         Google Pixel 4 xl
                                     </td>
-                                    <td class="p-2">
-                                        <i class="bx bx-trending-down text-danger align-middle mr-50"></i>
+                                    <td className="p-2">
+                                        <i className="bx bx-trending-down text-danger align-middle mr-50"></i>
                                         <span>-62.38%</span>
                                     </td>
-                                    <td class="p-2">$12,897</td>
-                                    <td class="text-danger p-2">Closed</td>
+                                    <td className="p-2">$12,897</td>
+                                    <td className="text-danger p-2">Closed</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -173,8 +188,8 @@ function Dashboard() {
                 </div>
 
                 <div className="col-xl-6 col-12">
-                    <div class="card card-shadow table-responsive">
-                        <table class="table table-striped">
+                    <div className="card card-shadow table-responsive">
+                        <table className="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Campaign</th>
@@ -185,64 +200,64 @@ function Dashboard() {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="p-2 line-ellipsis">
-                                        <img class="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
+                                    <td className="p-2 line-ellipsis">
+                                        <img className="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
                                         Fastrack Watches
                                     </td>
-                                    <td class="p-2">
-                                        <i class="bx bx-trending-up text-success align-middle mr-50"></i>
+                                    <td className="p-2">
+                                        <i className="bx bx-trending-up text-success align-middle mr-50"></i>
                                         <span>30%</span>
                                     </td>
-                                    <td class="p-2">$5,536</td>
-                                    <td class="text-success p-2">Active</td>
+                                    <td className="p-2">$5,536</td>
+                                    <td className="text-success p-2">Active</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 line-ellipsis">
-                                        <img class="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
+                                    <td className="p-2 line-ellipsis">
+                                        <img className="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
                                         Puma Shoes
                                     </td>
-                                    <td class="p-2">
-                                        <i class="bx bx-trending-down text-danger align-middle mr-50"></i>
+                                    <td className="p-2">
+                                        <i className="bx bx-trending-down text-danger align-middle mr-50"></i>
                                         <span>15.5%</span>
                                     </td>
-                                    <td class="p-2">$1,569</td>
-                                    <td class="text-success p-2">Active</td>
+                                    <td className="p-2">$1,569</td>
+                                    <td className="text-success p-2">Active</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 line-ellipsis">
-                                        <img class="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
+                                    <td className="p-2 line-ellipsis">
+                                        <img className="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
                                         Nike Air Jordan
                                     </td>
-                                    <td class="p-2">
-                                        <i class="bx bx-trending-up text-success align-middle mr-50"></i>
+                                    <td className="p-2">
+                                        <i className="bx bx-trending-up text-success align-middle mr-50"></i>
                                         <span>70.3%</span>
                                     </td>
-                                    <td class="p-2">$23,859</td>
-                                    <td class="text-danger p-2">Closed</td>
+                                    <td className="p-2">$23,859</td>
+                                    <td className="text-danger p-2">Closed</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 line-ellipsis">
-                                        <img class="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
+                                    <td className="p-2 line-ellipsis">
+                                        <img className="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
                                         Oneplus 7 pro
                                     </td>
-                                    <td class="p-2">
-                                        <i class="bx bx-trending-up text-success align-middle mr-50"></i>
+                                    <td className="p-2">
+                                        <i className="bx bx-trending-up text-success align-middle mr-50"></i>
                                         <span>10.4%</span>
                                     </td>
-                                    <td class="p-2">$9,523</td>
-                                    <td class="text-success p-2">Active</td>
+                                    <td className="p-2">$9,523</td>
+                                    <td className="text-success p-2">Active</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 line-ellipsis">
-                                        <img class="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
+                                    <td className="p-2 line-ellipsis">
+                                        <img className="rounded-circle mr-1" src={cupIcon} alt="card" height="24" width="24" />
                                         Google Pixel 4 xl
                                     </td>
-                                    <td class="p-2">
-                                        <i class="bx bx-trending-down text-danger align-middle mr-50"></i>
+                                    <td className="p-2">
+                                        <i className="bx bx-trending-down text-danger align-middle mr-50"></i>
                                         <span>-62.38%</span>
                                     </td>
-                                    <td class="p-2">$12,897</td>
-                                    <td class="text-danger p-2">Closed</td>
+                                    <td className="p-2">$12,897</td>
+                                    <td className="text-danger p-2">Closed</td>
                                 </tr>
                             </tbody>
                         </table>
