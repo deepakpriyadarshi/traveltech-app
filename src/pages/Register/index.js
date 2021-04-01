@@ -1,8 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, Redirect } from "react-router-dom";
 
 import registerSVG from "../../assets/images/register.svg";
 import useRegister from "../../hooks/useRegister";
+import { registerUser } from "../../utils/api/user";
+import { saveUserAuthToken } from "../../utils/localstorage";
 
 import "./index.css";
 
@@ -25,15 +27,51 @@ function Register() {
         resetForm,
     ] = useRegister();
 
-    const registerUser = () => {
-        console.log("VALID", validateRegistrationForm());
+    const [message, setMessage] = useState("");
+    const [regStatus, setStatus] = useState(0);
 
-        console.log(firstName, lastName, email, dob, password, confirmPassword);
+    const handleRegistration = () => {
+        if (validateRegistrationForm()) {
+            setMessage("Please wait while we register you...");
+            setStatus(1);
+
+            registerUser({ firstName, lastName, email, dob, password, confirmPassword })
+                .then((response) => {
+                    if (response.status === "exists") {
+                        setMessage("Email Already Registered");
+                    } else if (response.status === "success") {
+                        setMessage("Registered Successfully! Please wait while we redirect to your dashboard");
+
+                        saveUserAuthToken(response.token);
+
+                        setTimeout(() => {
+                            setStatus(2);
+                        }, 2000);
+                    } else {
+                        setMessage("Failed To Register");
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     };
 
     const clearForm = () => {
         resetForm();
+        setMessage("");
     };
+
+    if (regStatus === 2) {
+        return (
+            <Redirect
+                to={{
+                    pathname: "/dashboard",
+                    state: { referrer: "register" },
+                }}
+            />
+        );
+    }
 
     return (
         <div className="container-fluid">
@@ -50,7 +88,13 @@ function Register() {
                         <label>
                             First Name <span className="text-danger">*</span>
                         </label>
-                        <input type="text" className="form-control" value={firstName} onChange={(ev) => setFirstName(ev.target.value)} />
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={firstName}
+                            onChange={(ev) => setFirstName(ev.target.value)}
+                            disabled={regStatus}
+                        />
                         <span className="text-danger">{errorMessage.firstName}</span>
                     </div>
 
@@ -58,7 +102,13 @@ function Register() {
                         <label>
                             Last Name <span className="text-danger">*</span>
                         </label>
-                        <input type="text" className="form-control" value={lastName} onChange={(ev) => setLastName(ev.target.value)} />
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={lastName}
+                            onChange={(ev) => setLastName(ev.target.value)}
+                            disabled={regStatus}
+                        />
                         <span className="text-danger">{errorMessage.lastName}</span>
                     </div>
 
@@ -66,13 +116,25 @@ function Register() {
                         <label>
                             Email <span className="text-danger">*</span>
                         </label>
-                        <input type="email" className="form-control" value={email} onChange={(ev) => setEmail(ev.target.value)} />
+                        <input
+                            type="email"
+                            className="form-control"
+                            value={email}
+                            onChange={(ev) => setEmail(ev.target.value)}
+                            disabled={regStatus}
+                        />
                         <span className="text-danger">{errorMessage.email}</span>
                     </div>
 
                     <div className="form-group">
                         <label>DOB</label>
-                        <input type="date" className="form-control" value={dob} onChange={(ev) => setDob(ev.target.value)} />
+                        <input
+                            type="date"
+                            className="form-control"
+                            value={dob}
+                            onChange={(ev) => setDob(ev.target.value)}
+                            disabled={regStatus}
+                        />
                         <span className="text-danger">{errorMessage.dob}</span>
                     </div>
 
@@ -80,7 +142,13 @@ function Register() {
                         <label>
                             Password <span className="text-danger">*</span>
                         </label>
-                        <input type="password" className="form-control" value={password} onChange={(ev) => setPassword(ev.target.value)} />
+                        <input
+                            type="password"
+                            className="form-control"
+                            value={password}
+                            onChange={(ev) => setPassword(ev.target.value)}
+                            disabled={regStatus}
+                        />
                         <span className="text-danger">{errorMessage.password}</span>
                     </div>
 
@@ -93,18 +161,23 @@ function Register() {
                             className="form-control"
                             value={confirmPassword}
                             onChange={(ev) => setConfirmPassword(ev.target.value)}
+                            disabled={regStatus}
                         />
                         <span className="text-danger">{errorMessage.confirmPassword}</span>
                     </div>
 
-                    <div className="text-right">
-                        <button className="btn btn-danger mr-5" onClick={clearForm}>
-                            Reset
-                        </button>
-                        <button className="btn btn-success" onClick={registerUser}>
-                            Register
-                        </button>
-                    </div>
+                    <div className="text-center text-danger mt-4 mb-4">{message}</div>
+
+                    {!regStatus && (
+                        <div className="text-right">
+                            <button className="btn btn-danger mr-5" onClick={clearForm}>
+                                Reset
+                            </button>
+                            <button className="btn btn-success" onClick={handleRegistration}>
+                                Register
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
